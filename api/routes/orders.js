@@ -2,40 +2,37 @@ const express = require('express')
 const Orders = require('../models/Orders')
 
 const router = express.Router()
-/**
- * Para obtener un listado
- */
+
 router.get('/', (req, res) => {
-    Orders.find()
-        .exec()
-        .then(x => res.status(200).send(x))
+    Orders.find() // Busca todos los elementos que se encuentren en la coleccion Meals
+    .exec() // ejecuta la query -peticion- y nos devuelve una promesa en la que
+            // indicamos que devolvemos un codigo de estado (http status code) y los datos
+    .then(x => res.status(200).send(x))
 })
-/**
- * Para obtener un elemento
- */
+// ahora solo pedimos via GET un solo parametro, el id
 router.get('/:id', (req, res) => {
     Orders.findById(req.params.id)
-        .exec()
-        .then(x => res.status(200).send(x))
+    .exec() // ejecuto la consulta
+    // nos devuelve la promesa con el codigo de estado y los datos
+    .then(x => res.status(200).send(x))
 })
-/**
- * Para crear un elemento
- */
+
 router.post('/', (req, res) => {
+    // creo el nuevo elemento que recibo via POST a traves de BODY
+    // y me devuelve una promesa con el codigo de estado y los datos
     Orders.create(req.body).then(x => res.status(201).send(x))
 })
-/***
- * Para actualizar un elemento
- */
+
 router.put('/:id', (req, res) => {
-    Orders.findByIdAndUpdate(req.params.id, req.body)
-        .then(() => res.sendStatus(204))
+    // Actualizamos un dato concreto a traves de la id 
+    Orders.findOneAndUpdate(req.params.id, req.body)
+    // con la promesa devolvemos el codigo de estado
+    .then(() => res.sendStatus(204))
 })
-/**
- * Para eliminar un elemento
- */
+
 router.delete('/:id', (req, res) => {
-    Orders.findByIdAndDelete(req.params.id)
+    // elimino un elemento a traves de la id
+    Orders.findOneAndDelete(req.params.id)
     .exec()
     .then(() => res.sendStatus(204))
 })
